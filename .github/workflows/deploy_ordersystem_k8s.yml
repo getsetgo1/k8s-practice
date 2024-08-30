@@ -38,6 +38,6 @@ jobs:
           REPOSITORY: woojin-ordersystem
         run: |
           docker build -t $REGISTRY/$REPOSITORY:latest \
-          -f ./order-system/Dockerfile ./order-system \
+          -f ./order-system/Dockerfile ./order-system
           docker push $REGISTRY/$REPOSITORY:latest
 
