@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordersystem-deployment
+  namespace: hohey
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ordersystem # ⭐️ 해당 deployment는 labels.app=nginx인 파드만을 관리하겠다.
+  template:
+  # 아래 labels.app 부분은 service의 selector 부분과 일치해야하고, 위의 matchLabels 부분과도 일치해야함
+    metadata:
+      labels:
+        app: ordersystem  # ⭐️
+    spec:
+      containers:
+        - name: ordersystem
+        # aws의 ecr 주소를 사용
+          image: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com/woojin-ordersystem:latest
+          ports:
+          - containerPort: 8089 # ⭐️ 포트 주의!!
+          resources:
+          # 최대 할당 가능량
+            limits:
+              cpu: "1"
+              memory: "500Mi"
+          # 최소 할당량
+            requests:
+              cpu: "0.5"
+              memory: "250Mi"
+          env:
+          - name: REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                key: REDIS_HOST
+                name: hohey-secrets
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                key: DB_HOST
+                name: hohey-secrets
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: DB_USERNAME
+                name: hohey-secrets
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: DB_PASSWORD
+                name: hohey-secrets
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: JWT_SECRET
+                name: hohey-secrets
+          - name: JWT_SECRET_RT
+            valueFrom:
+              secretKeyRef:
+                key: JWT_SECRET_RT
+                name: hohey-secrets
+          - name: AWS_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: AWS_SECRET_KEY
+                name: hohey-secrets
+          - name: AWS_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: AWS_ACCESS_KEY
+                name: hohey-secrets

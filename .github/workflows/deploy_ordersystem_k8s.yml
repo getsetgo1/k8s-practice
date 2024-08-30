@@ -32,7 +32,7 @@ jobs:
       - name: login ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-
+# 이미지 새로 배포
       - name: build and push docker images to ecr
         env: 
           REGISTRY: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com 
@@ -40,4 +40,8 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:latest -f ./order-system/Dockerfile ./order-system
           docker push $REGISTRY/$REPOSITORY:latest
-          
+      # 이미지 변경되었을 경우 인지시키려면 restart해줘야한다. rollout하면 새로운 게 생겨야지 내려감. 온전히 떠있는지 health check처리까지 해야함 
+      - name: eks kubectl apply
+        run: |
+          kubectl apply -f ./order-system/k8s/ordersystem_depl.yml
+          kubectl rollout restart deployment ordersystem-deployment -n hohey
