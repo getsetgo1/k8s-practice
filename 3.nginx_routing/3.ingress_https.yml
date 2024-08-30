@@ -114,4 +114,4 @@ spec:
           service:
             name: nginx-service
             port: 
-              number: 80
+              number: 80 
