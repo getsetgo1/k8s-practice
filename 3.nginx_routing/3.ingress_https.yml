@@ -1,0 +1,117 @@
+# Pod 정의
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: hohey
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec: 
+      containers:
+        - name: nginx
+          image: nginx
+          ports: 
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: hohey
+spec:
+# ingress를 적용하기 위해 ClusterIP로 변경한다.
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector: 
+    app: my-nginx
+
+
+---
+# 쿠버네티스에서 https 인증서 적용 절차
+# 1. cert-manager 생성
+  # 1-1. cert-manager 생성을 위한 cert-manager namespace 생성 : kubectl create namespace cert-manager
+  # 1-2. heml 패키지 매니저 설치 <- cert-manager를 설치하기 위해 필요한 패키지 : 구글 검색 후 다운로드 후 로컬에 설치(쿠버네티스 상에 설치하는 것 아님 내 컴퓨터에!!)
+  # 1-3. helm repository 추가 : helm repo add jetstack https://charts.jetstack.io
+  # 1-4. helm repository update(로컬에서 작업하는 것) : helm repo update    
+  # 1-5. helm을 통해 cert-manager 설치 : helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.5.0 --set installCRDs=true
+
+# 2. ClusterIssuer 생성
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  namespace: hohey
+spec:
+  acme:
+  # 인증서 서버 주소, 해당 서버 리소스를 통해 인증서 발행
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: justhae0423@naver.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+# 3. Certificate 생성
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: parkwoojin-com-tls
+  namespace: hohey
+spec:
+  secretName: parkwoojin-com-tls
+  duration: 2160h #90일
+  renewBefore: 360h #15일전에 갱신
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: server.woojin.today
+  dnsNames:
+  - server.woojin.today
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-nginx-ingress
+  namespace: hohey
+  annotations: 
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1 #첫번째 prefix 제거 후, endpoint 전달
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+# front에서 product-service/product/list 이렇게 쓰면 ingress가 product-service인 거 인지하고 저 부분을 뗀 url을 서버로 요청한다
+
+spec:
+  tls:
+  - hosts:
+    - "server.woojin.today"
+    secretName: parkwoojin-com-tls
+  rules:
+  - host: server.woojin.today
+    http:
+      paths:
+      - path: /product-service/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port: 
+              number: 80
+      - path: /order-service/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port: 
+              number: 80
