@@ -37,6 +37,5 @@ jobs:
           REGISTRY: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com 
           REPOSITORY: woojin-ordersystem
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:latest \
-          -f ./order-system/Dockerfile ./order-system
+          docker build -t $REGISTRY/$REPOSITORY:latest -f ./order-system/Dockerfile ./order-system
           docker push $REGISTRY/$REPOSITORY:latest
