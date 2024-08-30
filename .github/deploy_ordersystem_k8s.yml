@@ -18,7 +18,6 @@ jobs:
         with:
           version: "v1.25.9"
         id: install
-
 # aws configure
 # key값 세팅
       - name: configure aws
@@ -27,8 +26,6 @@ jobs:
           aws-access-key-id: ${{secrets.AWS_KEY}}
           aws-secret-access-key: ${{secrets.AWS_SECRET}}
           aws-region: ap-northeast-2
-
+# aws eks~~ 명령어
       - name: update cluster information
         run: aws eks update-kubeconfig --name 6team-cluster --region ap-northeast-2  
-
-# aws eks~~ 명령어
