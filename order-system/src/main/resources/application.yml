@@ -5,14 +5,15 @@ spring:
 #    activate:
 #      on-profile: local # dev라고 이름을 지정하는 것이다.
   redis:
-    host: localhost
+    host: ${REDIS_HOST}
     port: 6379
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/ordersystem
-    username: root
-    password: 1234
-
+    url: jdbc:mariadb://${DB_HOST}:3306/ordersystem
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    tomcat:
+          max-active: 5
 #  # rabbit mq 환경 설정
 #  rabbitmq:
 #    host: localhost
@@ -40,15 +41,15 @@ logging:
 
 jwt:
   expiration: 30
-  secretKey: my_token_secret
+  secretKey: ${JWT_SECRET}
   expiration-rt: 14400 # 10일
-  secretKey-rt: hackathon
+  secretKey-rt: ${JWT_SECRET_RT}
 
 cloud:
   aws:
     credentials:
-      access-key: xxx
-      secret-key: yyy
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
     region:
       static: ap-southeast-2
     s3:
