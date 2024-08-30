@@ -23,7 +23,7 @@ spec:
           resources:
           # 최대 할당 가능량
             limits:
-              cpu: "0.2"
+              cpu: "1"
               memory: "250Mi"
           # 최소 할당량
             requests:
