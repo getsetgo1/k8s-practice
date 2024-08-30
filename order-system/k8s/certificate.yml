@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod # letsencrypt 인증서의 이름
-  namespace: clean
+  namespace: hohey
 spec:
   acme:
   # 인증서 서버 주소. 해당 서버의 리소스를 통해 인증서 발행
