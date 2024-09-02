@@ -4,7 +4,7 @@
 
 # 2. Horizontal Pod Autoscaler
 # 2. 컨테이너 자동 확장
-# 10분 지나고 나서 부하가 없을 시에 자동으로 기본 pod대수로 돌아옴
+# 5분 지나고 나서 부하가 없을 시에 자동으로 기본 pod대수로 돌아옴
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
