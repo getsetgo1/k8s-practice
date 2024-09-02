@@ -11,4 +11,5 @@ spec:
       port: 80
       targetPort: 8089 # ⭐️ 파드의 내부 포트와 일치
   selector:
-    app: ordersystem # deployment의 labels.app과 일치해야한다.
+    app: ordersystem # deployment의 labels.app과 일치해야한다.    
+            
