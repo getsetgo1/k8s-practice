@@ -70,3 +70,20 @@ spec:
               secretKeyRef:
                 key: AWS_ACCESS_KEY
                 name: hohey-secrets
+          # 무중단 배포를 위한 컨테이너 health check
+          # 나중에 팀플 때는 health check용 api 만들기
+          readinessProbe:
+            httpGet:
+              path: /product/list
+              port: 8089
+            # 컨테이너 시작 후 지연 시간 설정
+            initialDelaySeconds: 10
+            # 확인 반복 주기
+            periodSeconds: 10
+            # 요청 타임아웃 설정
+            timeoutSeconds: 1
+            # 헬스 체크 실패하면 기존 서버 사용 성공이면 새로운 서버 사용
+            # 성공 인식 횟수 설정
+            successThreshold: 1
+            # 연속 실패 횟수 : 연속적으로 3번을 실패하면 건강하지 않은 상태로 판단하여 기존 서버 종료시키지 않음
+            failureThreshold: 5
