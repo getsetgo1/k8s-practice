@@ -28,7 +28,7 @@ jobs:
           aws-region: ap-northeast-2
 # aws eks~~ 명령어
       - name: update cluster information
-        run: aws eks update-kubeconfig --name 6team-cluster --region ap-northeast-2
+        run: aws eks update-kubeconfig --name 6team_cluster --region ap-northeast-2
       - name: login ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
