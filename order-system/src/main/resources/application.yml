@@ -21,7 +21,7 @@ spring:
 #    username: guest
 #    password: guest
 #    virtual-host: / # 관례적으로 적는 것
-
+    
 
   jpa:
     database : mysql
