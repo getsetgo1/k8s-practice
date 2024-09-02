@@ -4,7 +4,7 @@ metadata:
   name: ordersystem-deployment
   namespace: hohey
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: ordersystem # ⭐️ 해당 deployment는 labels.app=nginx인 파드만을 관리하겠다.

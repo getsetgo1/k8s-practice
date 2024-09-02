@@ -1,0 +1,32 @@
+# 1. 우선 매트릭 서버 설치
+# - 매트릭 서버 : Pod의 자원 상황 모니터링하는 툴
+# kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# 2. Horizontal Pod Autoscaler
+# 2. 컨테이너 자동 확장
+# 10분 지나고 나서 부하가 없을 시에 자동으로 기본 pod대수로 돌아옴
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ordersystem-hpa
+  namespace: hohey
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ordersystem-deployment
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 50
+
+# 부하 테스트 스크립트 (리눅스 상에서 돌리는 스크립트, 따라서 로컬에서 돌리면 안되고 exec로 pod 안에 들어가서 돌릴 것!)
+# kubectl exec -it 파드명 /bin/bash -n hohey
+# 위에거가 잘 안 되면 kubectl exec -it 파드명 -n 네임스페이스명 -- bash 이거로 하기
+# while true; do curl -s http://ordersystem-service/product/list; done
+
+
+# 부하 모니터링
+# -w : watch (실시간 조회 옵션)을 의미
+# kubectl get hpa ordersystem-hpa -n hohey -w
+
+# 창 세개 띄워서 하나는 부하 모니터링 하나는 pods 보기 하나는 부하 생성
