@@ -56,7 +56,7 @@ public class ProductController {
         return new ResponseEntity<>(commonResDto,HttpStatus.OK);
     }
 
-    @PutMapping("/product/update-stock")
+    @PutMapping("/product/updatestock")
     public ResponseEntity<?> productStockUpdate(@RequestBody ProductUpdatStockDto dto){
         Product product=productService.productUpdateStock(dto);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "update is successful", product.getId());

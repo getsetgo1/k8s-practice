@@ -92,7 +92,7 @@ public class OrderingService {
             //== 재고 확인/감소 로직 끝==//
 
             //== MSA 재고 감소 로직 ==//
-            String updateUrl = "http://product-service/product/update-stock";
+            String updateUrl = "http://product-service/product/updatestock";
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<ProductUpdateStockDto> updateEntity = new HttpEntity<>(new ProductUpdateStockDto(orderDto.getProductId(), orderDto.getQuantity()), httpHeaders);
             restTemplate.exchange(updateUrl, HttpMethod.PUT, updateEntity, Void.class);
