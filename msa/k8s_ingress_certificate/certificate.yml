@@ -1,0 +1,32 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod # letsencrypt 인증서의 이름
+  namespace: hohey
+spec:
+  acme:
+  # 인증서 서버 주소. 해당 서버의 리소스를 통해 인증서 발행
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: justhae0423@naver.com # 인증서가 만료되거나 하면 여기로 알림간다!
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: parkwoojin-com-tls
+  namespace: hohey
+spec:
+  secretName: parkwoojin-com-tls
+  duration: 2160h # 90일
+  renewBefore: 360h # 15일 전에 갱신된다.
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: server.woojin.today
+  dnsNames:
+  - server.woojin.today

@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: order-msa-ingress
+  namespace: hohey
+  annotations:
+    kubernetes.io/ingress.class: nginx # 인그레스도 nginx로 만들어짐
+    cert-manager.io/cluster-issuer: letsencrypt-prod # 이 부분을 추가
+spec:
+  # 아래 tls 부분을 추가!
+  tls:
+  - hosts:
+    - "server.woojin.today"
+    secretName: parkwoojin-com-tls
+  rules:
+  - host: server.woojin.today
+    http:
+      paths:
+      - path: /member-service/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: member-service
+            port:
+              number: 80 # 서비스 포트를 적어 줘야 한다.
+      - path: /order-service/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: order-service
+            port:
+              number: 80 # 서비스 포트를 적어 줘야 한다.
+      - path: /product-service/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: product-service
+            port:
+              number: 80 # 서비스 포트를 적어 줘야 한다.
+

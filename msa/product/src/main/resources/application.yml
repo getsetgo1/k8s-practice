@@ -1,0 +1,70 @@
+# 포트 바꾸는 방법
+server:
+  port: 8089
+
+
+#    session :
+#      storage-type: redis
+#      추후에 session 용도가 아니라면 아래 redis 부분만 추가
+spring:
+  redis:
+    host: ${REDIS_HOST}
+    port: 6379
+
+  mvc:
+    # spring boot 2.4 이상에서는 기본적으로 PathPatternParser를 사용하고 있는데,
+    # spring fox와 같은 일부 라이브러리에서는 해당 pathpattern rule과 충돌나는 경우가 있음. 그래서 패스 패턴 룰을 바꿔준것임
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${DB_HOST}:3306/spring_msa_order
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    database : mysql
+    # innoDB 사용 설정
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    # 테이블은 생성해주나, 스키마는 반드시 사전에 생성 필요
+    generate-ddl: true
+    # jpa는 인터페이스이고, hibernate는 구현체이다. (실질적 기능 구현)
+    hibernate:
+      # create 옵션은 매번 table을 drop 후 재생성
+      # update 옵션은 변경 사항만 alter를 적용하고 기존의 데이터 유지
+      # validate는 실제 DB와의 차이만을 check => 반영을 안한다는 얘기. 에러를 발생시킨다.
+      # 로컬에서 작업할때는 update 아니면, create
+      # 변경 사항 중에 **주로 추가 사항만을 반영**하고, **삭제나 수정사항**은 반영 안되는 경우도 있음, 특히 어노테이션에 거는 옵션 이런거
+      # 꿀팁: 스키마가 확정되기 전까지는 create로 작업하다가 그 이후 update로 놓고 작업
+      ddl-auto: update
+      # 콘솔창에 ddl, dml문을 출력하여 보여주는 옵션이다.
+      # 실무에서는 로그를 다 파일로 관리한다 => 따라서 실무에선 안켜놓는게 좋음...
+    show_sql: true
+  application:
+    name: product-service
+
+#logging:
+#  level:
+#    로그 레벨 : trace < debug < info < error 순서의 로그 레벨을 가짐
+#    즉, info로 설정 시 trace, debug 로그는 출력되지 않음
+#    root: info
+
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+
+jwt:
+  expiration: 30
+  secretKey: ${JWT_SECRET}
+  expirationRt: 14400
+  secretKeyRt: ${JWT_SECRET_RT}
+
+# aws s3 설정
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-southeast-2
+    s3:
+      bucket: woojin-bucket
+
