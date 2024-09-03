@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 // 24.09.01 kube 배포: url 설정을 추가하여 service 자원을 검색하도록 설정한다.
 // url="http://product-service" => 쿠버네티스 서비스 자원의 이름을 의미한다.
 // url="" 이부분을 추가해주었다
+// url은 서비스명이다!
 @FeignClient(name="product-service", url="http://product-service", configuration = FeignConfig.class)
 public interface ProductFeign {
     @GetMapping(value="/product/{id}")
