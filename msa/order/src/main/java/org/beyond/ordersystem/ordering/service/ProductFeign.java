@@ -19,6 +19,6 @@ public interface ProductFeign {
     @GetMapping(value="/product/{id}")
     SuccessResponse getProductById(@PathVariable("id") Long id);
 
-    @PutMapping(value="/product/update-stock")
+    @PutMapping(value="/product/updatestock")
     void updateProductStock(@RequestBody ProductUpdateStockDto dto);
 }
