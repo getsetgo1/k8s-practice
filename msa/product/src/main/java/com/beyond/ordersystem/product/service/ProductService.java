@@ -164,7 +164,7 @@ public class ProductService {
     public Product productUpdateStock(ProductUpdatStockDto dto){
         System.out.println("line 165: " + dto);
         Product product = productRepository.findById(dto.getProductId()).orElseThrow(()->new EntityNotFoundException("프로덕트 없습니다"));
-        product.updateStockQuantity(dto.getProductQuantity());
+        product.updateStockQuantity(dto.getQuantity());
         return product;
     }
 

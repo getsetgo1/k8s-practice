@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class ProductUpdatStockDto {
     private Long productId;
-    private Integer productQuantity;
+    private Integer quantity;
 }
