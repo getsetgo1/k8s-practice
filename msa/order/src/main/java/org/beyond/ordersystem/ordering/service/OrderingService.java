@@ -112,6 +112,7 @@ public class OrderingService {
 
     @Transactional
     public CreateOrderResponse feignClientCreateOrder(List<CreateOrderRequest> createOrderRequest) {
+        console.log(createOrderRequest)
         String email = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
