@@ -21,6 +21,8 @@ spring:
     url: jdbc:mariadb://${DB_HOST}:3306/spring_msa_order
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    tomcat:
+      max-active: 5
   jpa:
     database : mysql
     # innoDB 사용 설정
