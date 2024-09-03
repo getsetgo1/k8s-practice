@@ -112,7 +112,7 @@ public class OrderingService {
        
     @Transactional
     public CreateOrderResponse feignClientCreateOrder(List<CreateOrderRequest> createOrderRequest) {
-        console.log(createOrderRequest);
+        log.info("line 115: {}", createOrderRequest);
         String email = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
@@ -125,6 +125,7 @@ public class OrderingService {
             ProductDto productDto = objectMapper.convertValue(successResponse.getResult(), ProductDto.class);
 
             // 재고 업데이트
+            log.info("line 128: {}", orderDto);
             productFeign.updateProductStock(new ProductUpdateStockDto(orderDto.getProductId(), orderDto.getQuantity()));
 
             OrderDetail orderDetail = CreateOrderDetailRequest.toEntity(orderDto, productDto.getId(), ordering);
